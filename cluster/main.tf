@@ -93,91 +93,91 @@ resource "google_compute_instance" "squid" {
 }
 
 
-# module "gke" {
-#   source                     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
-#   project_id                 = "gen3-workspace-1"
-#   name                       = "occ-workspace-dev-cluster-1"
-#   region                     = "us-central1"
-#   zones                      = ["us-central1-b"]
-#   network                    = module.vpc.network_name
-#   subnetwork                 = "subnet-01"
-#   ip_range_pods              = "kubernetes-pods"
-#   ip_range_services          = "kubernetes-services"
-#   http_load_balancing        = false
-#   horizontal_pod_autoscaling = false
-#   network_policy             = false
-#   enable_private_endpoint    = true
-#   enable_private_nodes       = true
-#   master_ipv4_cidr_block     = "10.0.0.0/28"
-#   master_authorized_networks = [
-#     {
-#       cidr_block = "172.27.32.14/32" 
-#       display_name = "dev-gen3-workspace-1-vpc"
-#     },
-#   ]
-#   create_service_account     = false
-#   regional                   = true
+module "gke" {
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+  project_id                 = "gen3-workspace-1"
+  name                       = "occ-workspace-dev-cluster-1"
+  region                     = "us-central1"
+  zones                      = ["us-central1-b"]
+  network                    = module.vpc.network_name
+  subnetwork                 = "subnet-01"
+  ip_range_pods              = "kubernetes-pods"
+  ip_range_services          = "kubernetes-services"
+  http_load_balancing        = false
+  horizontal_pod_autoscaling = false
+  network_policy             = false
+  enable_private_endpoint    = true
+  enable_private_nodes       = true
+  master_ipv4_cidr_block     = "10.0.0.0/28"
+  master_authorized_networks = [
+    {
+      cidr_block = "172.27.32.14/32" 
+      display_name = "dev-gen3-workspace-1-vpc"
+    },
+  ]
+  create_service_account     = false
+  regional                   = true
 
-#   node_pools = [
-#     {
-#       name                      = "default-node-pool"
-#       machine_type              = "e2-medium"
-#       node_locations            = "us-central1-b"
-#       min_count                 = 1
-#       max_count                 = 1
-#       local_ssd_count           = 0
-#       disk_size_gb              = 50
-#       disk_type                 = "pd-standard"
-#       image_type                = "COS_CONTAINERD"
-#       auto_repair               = true
-#       auto_upgrade              = true
-#       service_account           = "tf-gke-gen3-workspace--sz9k@gen3-workspace-1.iam.gserviceaccount.com"
-#       preemptible               = true
-#       initial_node_count        = 1
-#     },
-#   ]
+  node_pools = [
+    {
+      name                      = "default-node-pool"
+      machine_type              = "e2-medium"
+      node_locations            = "us-central1-b"
+      min_count                 = 1
+      max_count                 = 1
+      local_ssd_count           = 0
+      disk_size_gb              = 50
+      disk_type                 = "pd-standard"
+      image_type                = "COS_CONTAINERD"
+      auto_repair               = true
+      auto_upgrade              = true
+      service_account           = "tf-gke-gen3-workspace--sz9k@gen3-workspace-1.iam.gserviceaccount.com"
+      preemptible               = true
+      initial_node_count        = 1
+    },
+  ]
 
-#   node_pools_oauth_scopes = {
+  node_pools_oauth_scopes = {
+    all = []
+
+    default-node-pool = [
+      "https://www.googleapis.com/auth/cloud-platform",
+    ]
+  }
+
+  node_pools_labels = {
+    all = {}
+
+    default-node-pool = {
+      default-node-pool = true
+    }
+  }
+
+  node_pools_metadata = {
+    all = {}
+
+    default-node-pool = {
+      node-pool-metadata-custom-value = "my-node-pool"
+    }
+  }
+
+#   node_pools_taints = {
 #     all = []
 
 #     default-node-pool = [
-#       "https://www.googleapis.com/auth/cloud-platform",
+#       {
+#         key    = "default-node-pool"
+#         value  = true
+#         effect = "PREFER_NO_SCHEDULE"
+#       },
 #     ]
 #   }
 
-#   node_pools_labels = {
-#     all = {}
+  node_pools_tags = {
+    all = []
 
-#     default-node-pool = {
-#       default-node-pool = true
-#     }
-#   }
-
-#   node_pools_metadata = {
-#     all = {}
-
-#     default-node-pool = {
-#       node-pool-metadata-custom-value = "my-node-pool"
-#     }
-#   }
-
-# #   node_pools_taints = {
-# #     all = []
-
-# #     default-node-pool = [
-# #       {
-# #         key    = "default-node-pool"
-# #         value  = true
-# #         effect = "PREFER_NO_SCHEDULE"
-# #       },
-# #     ]
-# #   }
-
-#   node_pools_tags = {
-#     all = []
-
-#     default-node-pool = [
-#       "default-node-pool",
-#     ]
-#   }
-# }
+    default-node-pool = [
+      "default-node-pool",
+    ]
+  }
+}
