@@ -115,7 +115,7 @@ module "gke" {
       display_name = "dev-gen3-workspace-1-vpc"
     },
   ]
-  create_service_account     = true
+  create_service_account     = false
   regional                   = true
 
   node_pools = [
