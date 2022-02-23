@@ -25,40 +25,40 @@ terraform {
   }
 }
 
-# module "vpc" {
-#     source  = "terraform-google-modules/network/google"
-#     version = "~> 4.0"
+module "vpc" {
+    source  = "terraform-google-modules/network/google"
+    version = "~> 4.0"
 
-#     project_id   = "gen3-workspace-1"
-#     network_name = "dev-gen3-workspace-1-vpc"
-#     routing_mode = "GLOBAL"
+    project_id   = "gen3-workspace-1"
+    network_name = "dev-gen3-workspace-1-vpc"
+    routing_mode = "GLOBAL"
 
-#     subnets = [
-#         {
-#             subnet_name           = "subnet-01"
-#             subnet_ip             = "172.27.32.0/20"
-#             subnet_region         = "us-central1"
-#             subnet_private_access = "true"
-#             subnet_flow_logs      = "true"
-#             subnet_flow_logs_interval = "INTERVAL_10_MIN"
-#             subnet_flow_logs_sampling = 0.7
-#             subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-#         }
-#     ]
+    subnets = [
+        {
+            subnet_name           = "subnet-01"
+            subnet_ip             = "172.27.32.0/20"
+            subnet_region         = "us-central1"
+            subnet_private_access = "true"
+            subnet_flow_logs      = "true"
+            subnet_flow_logs_interval = "INTERVAL_10_MIN"
+            subnet_flow_logs_sampling = 0.7
+            subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
+        }
+    ]
 
-#     secondary_ranges = {
-#         subnet-01 = [
-#             {
-#                 range_name    = "kubernetes-pods"
-#                 ip_cidr_range = "10.139.0.0/16"
-#             },
-#             {
-#                 range_name    = "kubernetes-services"
-#                 ip_cidr_range = "10.138.128.0/20"
-#             },
-#         ]
-#     }
-# }
+    secondary_ranges = {
+        subnet-01 = [
+            {
+                range_name    = "kubernetes-pods"
+                ip_cidr_range = "10.139.0.0/16"
+            },
+            {
+                range_name    = "kubernetes-services"
+                ip_cidr_range = "10.138.128.0/20"
+            },
+        ]
+    }
+}
 
 resource "google_compute_instance" "squid" {
   count                   = "1"
